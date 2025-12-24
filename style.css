@@ -8,7 +8,7 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
     background-size: 400% 400%;
-    animation: gradientShift 15s ease infinite;
+    animation: gradientShift 20s ease infinite;
     min-height: 100vh;
     overflow-x: hidden;
     perspective: 1000px;
@@ -16,6 +16,9 @@ body {
     align-items: center;
     justify-content: center;
     position: relative;
+    will-change: background-position;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 @keyframes gradientShift {
@@ -269,13 +272,64 @@ body {
 .container {
     position: relative;
     width: 90%;
-    max-width: 500px;
-    height: 600px;
+    max-width: 600px;
+    height: 700px;
     z-index: 10;
     perspective: 1200px;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 1s ease-in, visibility 1s;
+    transition: opacity 0.8s ease-in, visibility 0.8s;
+    will-change: opacity;
+}
+
+/* Desktop optimizations */
+@media (min-width: 1024px) {
+    .container {
+        max-width: 650px;
+        height: 750px;
+    }
+    
+    .card-content {
+        padding: 50px;
+    }
+    
+    .title {
+        font-size: 3.5em;
+    }
+    
+    .landing-title {
+        font-size: 5em;
+    }
+    
+    .navigation {
+        padding: 18px 35px;
+    }
+    
+    .nav-btn {
+        padding: 12px 25px;
+        font-size: 1.1em;
+    }
+    
+    .quote-text {
+        font-size: 1.5em;
+        padding: 30px;
+    }
+    
+    .final-message-text {
+        font-size: 1.3em;
+    }
+}
+
+/* Large Desktop */
+@media (min-width: 1440px) {
+    .container {
+        max-width: 700px;
+        height: 800px;
+    }
+    
+    .card-content {
+        padding: 60px;
+    }
 }
 
 .container.active {
@@ -289,25 +343,28 @@ body {
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
-    transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.8s;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s;
     opacity: 0;
     pointer-events: none;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
 .card.active {
     opacity: 1;
     pointer-events: all;
-    transform: translateX(0) rotateY(0deg) scale(1);
+    transform: translate3d(0, 0, 0) rotateY(0deg) scale(1);
 }
 
 .card.prev {
-    transform: translateX(-100%) rotateY(-30deg) scale(0.8);
-    opacity: 0.3;
+    transform: translate3d(-100%, 0, 0) rotateY(-20deg) scale(0.85);
+    opacity: 0.2;
 }
 
 .card.next {
-    transform: translateX(100%) rotateY(30deg) scale(0.8);
-    opacity: 0.3;
+    transform: translate3d(100%, 0, 0) rotateY(20deg) scale(0.85);
+    opacity: 0.2;
 }
 
 .card-content {
@@ -321,9 +378,13 @@ body {
     justify-content: center;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     position: relative;
     overflow: hidden;
+    will-change: transform;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
 }
 
 /* Heart Icon */
@@ -331,12 +392,14 @@ body {
     font-size: 80px;
     animation: heartbeat 1.5s ease-in-out infinite;
     margin-bottom: 20px;
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 @keyframes heartbeat {
-    0%, 100% { transform: scale(1); }
-    25% { transform: scale(1.2); }
-    50% { transform: scale(1); }
+    0%, 100% { transform: scale3d(1, 1, 1); }
+    25% { transform: scale3d(1.15, 1.15, 1); }
+    50% { transform: scale3d(1, 1, 1); }
 }
 
 /* Title */
@@ -423,6 +486,9 @@ body {
     overflow-x: hidden;
     padding: 10px;
     margin: 20px 0;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    will-change: scroll-position;
 }
 
 .memories-scroll-container::-webkit-scrollbar {
@@ -609,6 +675,9 @@ body {
 .final-content {
     padding: 30px;
     overflow-y: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    will-change: scroll-position;
 }
 
 .final-content::-webkit-scrollbar {
@@ -861,19 +930,22 @@ body {
     position: fixed;
     bottom: 30px;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%) translateZ(0);
     display: flex;
     align-items: center;
     gap: 20px;
     z-index: 100;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     padding: 15px 30px;
     border-radius: 50px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.5s, visibility 0.5s;
+    transition: opacity 0.4s ease, visibility 0.4s;
+    will-change: opacity;
+    -webkit-transform: translateX(-50%) translateZ(0);
 }
 
 .navigation.active {

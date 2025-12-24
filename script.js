@@ -89,38 +89,48 @@ function startCelebration() {
     }, 3000);
 }
 
-// Create celebration burst effect
+// Create celebration burst effect (optimized)
 function createCelebrationBurst() {
-    const emojis = ['🎉', '🎊', '✨', '💖', '💕', '🎆', '🎇', '💫'];
+    const emojis = ['🎉', '🎊', '✨', '💖', '💕'];
     const centerX = window.innerWidth / 2;
     const centerY = window.innerHeight / 2;
+    const count = window.innerWidth > 768 ? 12 : 8; // Fewer on mobile
     
-    for (let i = 0; i < 20; i++) {
+    // Use document fragment for better performance
+    const fragment = document.createDocumentFragment();
+    
+    for (let i = 0; i < count; i++) {
         const emoji = document.createElement('div');
         emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
         emoji.style.position = 'fixed';
         emoji.style.left = centerX + 'px';
         emoji.style.top = centerY + 'px';
-        emoji.style.fontSize = '40px';
+        emoji.style.fontSize = window.innerWidth > 768 ? '40px' : '30px';
         emoji.style.pointerEvents = 'none';
         emoji.style.zIndex = '1000';
-        emoji.style.transform = 'translate(-50%, -50%)';
+        emoji.style.opacity = '0';
+        emoji.style.willChange = 'transform, opacity';
+        emoji.style.transform = 'translateZ(0)';
         
-        const angle = (Math.PI * 2 * i) / 20;
-        const distance = 200 + Math.random() * 100;
+        const angle = (Math.PI * 2 * i) / count;
+        const distance = window.innerWidth > 768 ? 250 : 150;
         const endX = centerX + Math.cos(angle) * distance;
         const endY = centerY + Math.sin(angle) * distance;
         
-        emoji.style.animation = `celebrationBurst 1.5s ease-out forwards`;
+        emoji.style.animation = `celebrationBurst 1.2s ease-out forwards`;
         emoji.style.setProperty('--end-x', endX + 'px');
         emoji.style.setProperty('--end-y', endY + 'px');
         
-        document.body.appendChild(emoji);
+        fragment.appendChild(emoji);
         
         setTimeout(() => {
-            emoji.remove();
-        }, 1500);
+            if (emoji.parentNode) {
+                emoji.remove();
+            }
+        }, 1200);
     }
+    
+    document.body.appendChild(fragment);
 }
 
 // Add celebration burst animation
@@ -128,11 +138,11 @@ const celebrationStyle = document.createElement('style');
 celebrationStyle.textContent = `
     @keyframes celebrationBurst {
         0% {
-            transform: translate(-50%, -50%) scale(0) rotate(0deg);
+            transform: translate3d(-50%, -50%, 0) scale3d(0, 0, 1) rotate(0deg);
             opacity: 1;
         }
         100% {
-            transform: translate(calc(var(--end-x) - 50%), calc(var(--end-y) - 50%)) scale(1.5) rotate(720deg);
+            transform: translate3d(calc(var(--end-x) - 50%), calc(var(--end-y) - 50%), 0) scale3d(1.2, 1.2, 1) rotate(360deg);
             opacity: 0;
         }
     }
@@ -146,6 +156,7 @@ function updateCards() {
         
         if (index === currentPage) {
             card.classList.add('active');
+            smoothTransition(); // Smooth scroll on page change
         } else if (index < currentPage) {
             card.classList.add('prev');
         } else {
@@ -176,6 +187,11 @@ function nextPage() {
         currentPage++;
         updateCards();
         updateNavigation();
+        if (currentPage === 2) {
+            startQuoteRotation();
+        } else {
+            stopQuoteRotation();
+        }
         createHeartBurst();
     }
 }
@@ -186,6 +202,11 @@ function prevPage() {
         currentPage--;
         updateCards();
         updateNavigation();
+        if (currentPage === 2) {
+            startQuoteRotation();
+        } else {
+            stopQuoteRotation();
+        }
     }
 }
 
@@ -195,6 +216,11 @@ function goToPage(page) {
         currentPage = page;
         updateCards();
         updateNavigation();
+        if (page === 2) {
+            startQuoteRotation();
+        } else {
+            stopQuoteRotation();
+        }
         if (page > 0) {
             createHeartBurst();
         }
@@ -233,12 +259,32 @@ dots.forEach((dot, index) => {
 quoteNextBtn.addEventListener('click', nextQuote);
 quotePrevBtn.addEventListener('click', prevQuote);
 
-// Auto-rotate quotes
-setInterval(() => {
-    if (currentPage === 2) { // Quotes page
-        nextQuote();
+// Auto-rotate quotes (optimized - only when page is visible)
+let quoteInterval = null;
+function startQuoteRotation() {
+    if (quoteInterval) clearInterval(quoteInterval);
+    quoteInterval = setInterval(() => {
+        if (currentPage === 2 && document.visibilityState === 'visible') {
+            nextQuote();
+        }
+    }, 6000); // Increased interval for better performance
+}
+
+function stopQuoteRotation() {
+    if (quoteInterval) {
+        clearInterval(quoteInterval);
+        quoteInterval = null;
     }
-}, 5000);
+}
+
+// Start rotation when on quotes page
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && currentPage === 2) {
+        startQuoteRotation();
+    } else {
+        stopQuoteRotation();
+    }
+});
 
 // Keyboard navigation
 document.addEventListener('keydown', (e) => {
@@ -259,27 +305,40 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Create floating hearts in background
+// Create floating hearts in background (optimized)
+let heartCount = 0;
+const maxHearts = 8; // Limit concurrent hearts
+
 function createFloatingHearts() {
     const heartsContainer = document.querySelector('.hearts-container');
-    const heartEmojis = ['❤️', '💕', '💖', '💗', '💓', '💝', '💞', '💟'];
+    const heartEmojis = ['❤️', '💕', '💖', '💗', '💓', '💝'];
     
-    setInterval(() => {
+    // Only create hearts if under limit
+    const interval = setInterval(() => {
+        if (heartCount >= maxHearts) return;
+        
         const heart = document.createElement('div');
         heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
-        heart.style.position = 'absolute';
+        heart.style.position = 'fixed';
         heart.style.left = Math.random() * 100 + '%';
-        heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+        heart.style.fontSize = (Math.random() * 15 + 20) + 'px';
         heart.style.opacity = '0';
-        heart.style.animation = `floatHeart ${3 + Math.random() * 2}s ease-out forwards`;
+        heart.style.animation = `floatHeart ${4 + Math.random() * 2}s ease-out forwards`;
         heart.style.pointerEvents = 'none';
+        heart.style.willChange = 'transform, opacity';
+        heart.style.transform = 'translateZ(0)';
+        heart.style.zIndex = '1';
         
         heartsContainer.appendChild(heart);
+        heartCount++;
         
         setTimeout(() => {
-            heart.remove();
-        }, 5000);
-    }, 800);
+            if (heart.parentNode) {
+                heart.remove();
+                heartCount--;
+            }
+        }, 6000);
+    }, 1500); // Reduced frequency
 }
 
 // Add floating heart animation
@@ -287,7 +346,7 @@ const style = document.createElement('style');
 style.textContent = `
     @keyframes floatHeart {
         0% {
-            transform: translateY(100vh) rotate(0deg);
+            transform: translate3d(0, 100vh, 0) rotate(0deg);
             opacity: 0;
         }
         10% {
@@ -297,33 +356,43 @@ style.textContent = `
             opacity: 1;
         }
         100% {
-            transform: translateY(-100px) rotate(360deg);
+            transform: translate3d(0, -100px, 0) rotate(360deg);
             opacity: 0;
         }
     }
 `;
 document.head.appendChild(style);
 
-// Create stars background
+// Create stars background (optimized)
 function createStars() {
     const starsContainer = document.querySelector('.stars');
-    const starCount = 50;
+    // Reduce star count for better performance
+    const starCount = window.innerWidth > 768 ? 30 : 20;
+    
+    // Use document fragment for better performance
+    const fragment = document.createDocumentFragment();
     
     for (let i = 0; i < starCount; i++) {
         const star = document.createElement('div');
-        star.style.position = 'absolute';
-        star.style.width = Math.random() * 3 + 'px';
-        star.style.height = star.style.width;
+        const size = Math.random() * 2 + 1;
+        star.style.position = 'fixed';
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
         star.style.background = 'white';
         star.style.borderRadius = '50%';
         star.style.left = Math.random() * 100 + '%';
         star.style.top = Math.random() * 100 + '%';
-        star.style.opacity = Math.random();
-        star.style.animation = `twinkle ${2 + Math.random() * 3}s ease-in-out infinite`;
+        star.style.opacity = Math.random() * 0.5 + 0.3;
+        star.style.animation = `twinkle ${3 + Math.random() * 2}s ease-in-out infinite`;
         star.style.animationDelay = Math.random() * 2 + 's';
+        star.style.willChange = 'opacity, transform';
+        star.style.transform = 'translateZ(0)';
+        star.style.pointerEvents = 'none';
         
-        starsContainer.appendChild(star);
+        fragment.appendChild(star);
     }
+    
+    starsContainer.appendChild(fragment);
 }
 
 // Add twinkle animation
@@ -332,18 +401,24 @@ twinkleStyle.textContent = `
     @keyframes twinkle {
         0%, 100% {
             opacity: 0.3;
-            transform: scale(1);
+            transform: scale3d(1, 1, 1);
         }
         50% {
             opacity: 1;
-            transform: scale(1.5);
+            transform: scale3d(1.3, 1.3, 1);
         }
     }
 `;
 document.head.appendChild(twinkleStyle);
 
-// Create heart burst effect
+// Create heart burst effect (optimized)
+let lastBurstTime = 0;
 function createHeartBurst() {
+    // Throttle bursts
+    const now = Date.now();
+    if (now - lastBurstTime < 500) return;
+    lastBurstTime = now;
+    
     const heartEmojis = ['❤️', '💕', '💖', '💗'];
     const activeCard = cards[currentPage];
     if (!activeCard) return;
@@ -351,33 +426,42 @@ function createHeartBurst() {
     const rect = activeCard.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
+    const count = 6; // Reduced from 8
     
-    for (let i = 0; i < 8; i++) {
+    const fragment = document.createDocumentFragment();
+    
+    for (let i = 0; i < count; i++) {
         const heart = document.createElement('div');
         heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
         heart.style.position = 'fixed';
         heart.style.left = centerX + 'px';
         heart.style.top = centerY + 'px';
-        heart.style.fontSize = '30px';
+        heart.style.fontSize = '28px';
         heart.style.pointerEvents = 'none';
         heart.style.zIndex = '1000';
         heart.style.opacity = '0';
+        heart.style.willChange = 'transform, opacity';
+        heart.style.transform = 'translateZ(0)';
         
-        const angle = (Math.PI * 2 * i) / 8;
-        const distance = 100;
+        const angle = (Math.PI * 2 * i) / count;
+        const distance = 80;
         const endX = centerX + Math.cos(angle) * distance;
         const endY = centerY + Math.sin(angle) * distance;
         
-        heart.style.animation = `heartBurst 1s ease-out forwards`;
+        heart.style.animation = `heartBurst 0.8s ease-out forwards`;
         heart.style.setProperty('--end-x', endX + 'px');
         heart.style.setProperty('--end-y', endY + 'px');
         
-        document.body.appendChild(heart);
+        fragment.appendChild(heart);
         
         setTimeout(() => {
-            heart.remove();
-        }, 1000);
+            if (heart.parentNode) {
+                heart.remove();
+            }
+        }, 800);
     }
+    
+    document.body.appendChild(fragment);
 }
 
 // Add heart burst animation
@@ -385,14 +469,14 @@ const burstStyle = document.createElement('style');
 burstStyle.textContent = `
     @keyframes heartBurst {
         0% {
-            transform: translate(0, 0) scale(0);
+            transform: translate3d(0, 0, 0) scale3d(0, 0, 1);
             opacity: 0;
         }
         50% {
             opacity: 1;
         }
         100% {
-            transform: translate(calc(var(--end-x) - 50%), calc(var(--end-y) - 50%)) scale(1.5);
+            transform: translate3d(calc(var(--end-x) - 50%), calc(var(--end-y) - 50%), 0) scale3d(1.2, 1.2, 1);
             opacity: 0;
         }
     }
@@ -440,12 +524,17 @@ rippleStyle.textContent = `
 `;
 document.head.appendChild(rippleStyle);
 
-// Smooth scroll on page change
+// Smooth scroll on page change (optimized)
 function smoothTransition() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
+    if ('scrollBehavior' in document.documentElement.style) {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    } else {
+        // Fallback for older browsers
+        window.scrollTo(0, 0);
+    }
 }
 
 // Add touch swipe support for mobile
