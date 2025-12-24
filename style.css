@@ -604,17 +604,26 @@ body {
 
 .quote-item {
     position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
+    height: 100%;
     opacity: 0;
+    visibility: hidden;
     transform: translateX(50px);
     transition: all 0.6s ease;
     text-align: center;
     padding: 20px;
+    pointer-events: none;
+    z-index: 1;
 }
 
 .quote-item.active {
     opacity: 1;
+    visibility: visible;
     transform: translateX(0);
+    pointer-events: auto;
+    z-index: 2;
 }
 
 .quote-icon {
@@ -671,8 +680,9 @@ body {
     font-weight: 600;
 }
 
-/* Final Wish */
-.final-content {
+/* Final Wish / Ending Page */
+.final-content,
+.ending-content {
     padding: 30px;
     overflow-y: auto;
     scroll-behavior: smooth;
@@ -680,16 +690,21 @@ body {
     will-change: scroll-position;
 }
 
-.final-content::-webkit-scrollbar {
+.final-content::-webkit-scrollbar,
+.ending-content::-webkit-scrollbar,
+.ending-message-container::-webkit-scrollbar {
     width: 6px;
 }
 
-.final-content::-webkit-scrollbar-thumb {
+.final-content::-webkit-scrollbar-thumb,
+.ending-content::-webkit-scrollbar-thumb,
+.ending-message-container::-webkit-scrollbar-thumb {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-radius: 10px;
 }
 
-.final-title {
+.final-title,
+.ending-title {
     font-size: 2.5em;
     background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
     -webkit-background-clip: text;
@@ -699,19 +714,30 @@ body {
     text-align: center;
 }
 
-.final-message-container {
+.final-message-container,
+.ending-message-container {
     background: linear-gradient(135deg, rgba(255, 107, 157, 0.05) 0%, rgba(196, 69, 105, 0.05) 100%);
     padding: 25px;
     border-radius: 15px;
     border: 2px solid rgba(255, 107, 157, 0.2);
+    max-height: calc(100vh - 300px);
+    overflow-y: auto;
+    scroll-behavior: smooth;
 }
 
-.final-message-text {
+.final-message-text,
+.ending-message-text {
     font-size: 1.2em;
-    line-height: 1.8;
+    line-height: 1.9;
     color: #333;
-    text-align: center;
+    text-align: left;
     animation: messageFadeIn 1s ease-out;
+    padding: 10px;
+}
+
+.ending-message-text {
+    font-size: 1.15em;
+    line-height: 2;
 }
 
 .highlight {
@@ -1193,23 +1219,34 @@ body {
         font-size: 1em;
     }
 
-    /* Final Wish Mobile */
-    .final-content {
+    /* Final Wish / Ending Page Mobile */
+    .final-content,
+    .ending-content {
         padding: 15px 10px;
     }
 
-    .final-title {
+    .final-title,
+    .ending-title {
         font-size: 1.8em;
         margin-bottom: 20px;
     }
 
-    .final-message-container {
+    .final-message-container,
+    .ending-message-container {
         padding: 20px 15px;
+        max-height: calc(100vh - 250px);
     }
 
-    .final-message-text {
+    .final-message-text,
+    .ending-message-text {
         font-size: 1em;
-        line-height: 1.6;
+        line-height: 1.7;
+        text-align: left;
+    }
+    
+    .ending-message-text {
+        font-size: 0.95em;
+        line-height: 1.8;
     }
 
     .highlight {
@@ -1353,7 +1390,8 @@ body {
 
     .memories-content h2,
     .quotes-content h2,
-    .final-title {
+    .final-title,
+    .ending-title {
         font-size: 1.5em;
     }
 
@@ -1362,8 +1400,14 @@ body {
         padding: 15px 12px;
     }
 
-    .final-message-text {
+    .final-message-text,
+    .ending-message-text {
         font-size: 0.95em;
+    }
+    
+    .ending-message-text {
+        font-size: 0.9em;
+        line-height: 1.7;
     }
 
     .celebration-year {
