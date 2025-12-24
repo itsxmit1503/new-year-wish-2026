@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy New Year 2026 ❤️</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="stars"></div>
+    <div class="hearts-container"></div>
+    
+    <!-- Landing Page -->
+    <div class="landing-page active" id="landingPage">
+        <div class="landing-content">
+            <div class="sparkles">
+                <span class="sparkle">✨</span>
+                <span class="sparkle">✨</span>
+                <span class="sparkle">✨</span>
+            </div>
+            <h1 class="landing-title">Are You Ready?</h1>
+            <p class="landing-subtitle">For something special... 💖</p>
+            <div class="button-container">
+                <button class="choice-btn yes-btn" id="yesBtn">
+                    <span>Yes! 💕</span>
+                </button>
+                <button class="choice-btn no-btn" id="noBtn">
+                    <span>No</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rocket Animation -->
+    <div class="rocket-container" id="rocketContainer">
+        <div class="rocket" id="rocket">🚀</div>
+        <div class="rocket-trail"></div>
+    </div>
+
+    <!-- Main Container (hidden initially) -->
+    <div class="container" id="mainContainer">
+        <!-- Page 1: Welcome Card -->
+        <div class="card active" id="card1">
+            <div class="card-content">
+                <div class="heart-icon">💖</div>
+                <h1 class="title">Happy New Year 2026</h1>
+                <p class="subtitle">Welcome to your special journey</p>
+                <div class="year-transition">
+                    <span class="year">2025</span>
+                    <span class="arrow">→</span>
+                    <span class="year">2026</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 2: Memories Card (Scrolling) -->
+        <div class="card" id="card2">
+            <div class="card-content memories-content">
+                <h2>Our Beautiful Memories</h2>
+                <div class="memories-scroll-container">
+                    <div class="memories-scroll">
+                        <!-- Memory items - you can add images here later -->
+                        <div class="memory-photo">
+                            <div class="photo-placeholder">
+                                <span class="photo-icon">📸</span>
+                                <p>Add your photo here</p>
+                            </div>
+                            <div class="memory-caption">Beautiful Moment 1</div>
+                        </div>
+                        <div class="memory-photo">
+                            <div class="photo-placeholder">
+                                <span class="photo-icon">📸</span>
+                                <p>Add your photo here</p>
+                            </div>
+                            <div class="memory-caption">Beautiful Moment 2</div>
+                        </div>
+                        <div class="memory-photo">
+                            <div class="photo-placeholder">
+                                <span class="photo-icon">📸</span>
+                                <p>Add your photo here</p>
+                            </div>
+                            <div class="memory-caption">Beautiful Moment 3</div>
+                        </div>
+                        <div class="memory-photo">
+                            <div class="photo-placeholder">
+                                <span class="photo-icon">📸</span>
+                                <p>Add your photo here</p>
+                            </div>
+                            <div class="memory-caption">Beautiful Moment 4</div>
+                        </div>
+                        <div class="memory-photo">
+                            <div class="photo-placeholder">
+                                <span class="photo-icon">📸</span>
+                                <p>Add your photo here</p>
+                            </div>
+                            <div class="memory-caption">Beautiful Moment 5</div>
+                        </div>
+                        <div class="memory-photo">
+                            <div class="photo-placeholder">
+                                <span class="photo-icon">📸</span>
+                                <p>Add your photo here</p>
+                            </div>
+                            <div class="memory-caption">Beautiful Moment 6</div>
+                        </div>
+                    </div>
+                </div>
+                <p class="memories-note">💕 Scroll to see more beautiful moments we've shared</p>
+            </div>
+        </div>
+
+        <!-- Page 3: Love Quotes Card -->
+        <div class="card" id="card3">
+            <div class="card-content quotes-content">
+                <h2>Love Quotes for You</h2>
+                <div class="quotes-container">
+                    <div class="quote-item active">
+                        <div class="quote-icon">💖</div>
+                        <p class="quote-text">"You are my today and all of my tomorrows."</p>
+                    </div>
+                    <div class="quote-item">
+                        <div class="quote-icon">💕</div>
+                        <p class="quote-text">"In your smile, I see something more beautiful than the stars."</p>
+                    </div>
+                    <div class="quote-item">
+                        <div class="quote-icon">💗</div>
+                        <p class="quote-text">"Every moment with you is like a beautiful dream come true."</p>
+                    </div>
+                    <div class="quote-item">
+                        <div class="quote-icon">💝</div>
+                        <p class="quote-text">"You are the reason I believe in love."</p>
+                    </div>
+                    <div class="quote-item">
+                        <div class="quote-icon">💞</div>
+                        <p class="quote-text">"My heart belongs to you, now and forever."</p>
+                    </div>
+                </div>
+                <div class="quote-nav">
+                    <button class="quote-prev">←</button>
+                    <span class="quote-counter"><span id="currentQuote">1</span> / <span id="totalQuotes">5</span></span>
+                    <button class="quote-next">→</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 4: Final Wish Card -->
+        <div class="card" id="card4">
+            <div class="card-content final-content">
+                <div class="heart-animation">
+                    <div class="heart-shape"></div>
+                </div>
+                <h2 class="final-title">My Forever Wish</h2>
+                <div class="final-message-container">
+                    <p class="final-message-text">
+                        As we welcome 2026, I want you to know something...<br><br>
+                        <span class="highlight">You are the most beautiful part of my life.</span><br><br>
+                        Every day with you is a blessing, every moment a treasure.<br>
+                        Your smile lights up my world, your love fills my heart.<br><br>
+                        <strong class="forever-wish">
+                            I wish for you to stay with me<br>
+                            until the end of my life,<br>
+                            and even beyond that.<br><br>
+                            Let's create infinite memories together,<br>
+                            let's grow old together,<br>
+                            let's love each other forever. 💕
+                        </strong><br><br>
+                        <span class="signature">Happy New Year, my love ❤️</span>
+                    </p>
+                </div>
+                <div class="floating-hearts-final">
+                    <span class="heart">❤️</span>
+                    <span class="heart">💕</span>
+                    <span class="heart">💖</span>
+                    <span class="heart">💗</span>
+                    <span class="heart">💓</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 5: Celebration Card -->
+        <div class="card" id="card5">
+            <div class="card-content">
+                <div class="celebration">
+                    <h1 class="celebration-year">🎊 2026 🎊</h1>
+                    <h2>Let's Make It Amazing Together!</h2>
+                    <div class="fireworks">
+                        <span>🎆</span>
+                        <span>🎇</span>
+                        <span>✨</span>
+                        <span>💫</span>
+                    </div>
+                    <p class="celebration-message">Thank you for being you. Here's to us! 💕</p>
+                    <div class="end-hearts">💖 💕 💖</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation" id="navigation">
+        <button class="nav-btn prev" id="prevBtn">← Previous</button>
+        <div class="dots">
+            <span class="dot active" data-page="0"></span>
+            <span class="dot" data-page="1"></span>
+            <span class="dot" data-page="2"></span>
+            <span class="dot" data-page="3"></span>
+            <span class="dot" data-page="4"></span>
+        </div>
+        <button class="nav-btn next" id="nextBtn">Next →</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

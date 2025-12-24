@@ -1,0 +1,59 @@
+═══════════════════════════════════════════════════════════════
+  🚀 EASY SETUP - Just Follow These Steps in GitHub Desktop
+═══════════════════════════════════════════════════════════════
+
+Since you have GitHub Desktop installed, here's the SIMPLEST way:
+
+STEP 1: Open GitHub Desktop
+─────────────────────────────
+- Open GitHub Desktop application
+- Sign in with your GitHub account (if not already signed in)
+
+STEP 2: Add Your Project
+─────────────────────────
+1. Click "File" → "Add Local Repository"
+2. Click "Create a New Repository" button
+3. Fill in:
+   • Name: new-year-wish-2026
+   • Description: A beautiful New Year 2026 wish webpage
+   • Local path: D:\NEW YEAR PROJECT
+   • UNCHECK "Initialize this repository with a README"
+4. Click "Create Repository"
+
+STEP 3: Commit Your Files
+───────────────────────────
+1. You'll see all your files listed
+2. At the bottom, write this message:
+   "Initial commit: New Year 2026 wish webpage"
+3. Click "Commit to main" button
+
+STEP 4: Publish to GitHub
+───────────────────────────
+1. Click "Publish repository" button (top right)
+2. IMPORTANT: UNCHECK "Keep this code private" ✅
+3. Click "Publish Repository"
+4. Wait for upload to complete
+
+STEP 5: Make It Live
+─────────────────────
+1. Go to: https://github.com
+2. Find your repository: new-year-wish-2026
+3. Click "Settings" (top menu)
+4. Click "Pages" (left sidebar)
+5. Under "Source":
+   • Select: "Deploy from a branch"
+   • Branch: main
+   • Folder: / (root)
+6. Click "Save"
+7. Wait 1-2 minutes
+
+STEP 6: Your Site is Live! 🎉
+───────────────────────────────
+Visit: https://YOUR_USERNAME.github.io/new-year-wish-2026
+
+Replace YOUR_USERNAME with your actual GitHub username!
+
+═══════════════════════════════════════════════════════════════
+
+That's it! Your beautiful webpage is now live! 💕
+
