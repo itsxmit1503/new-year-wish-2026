@@ -1,6 +1,6 @@
 // Global variables
 let currentPage = 0;
-const totalPages = 5;
+const totalPages = 7;
 const cards = document.querySelectorAll('.card');
 const dots = document.querySelectorAll('.dot');
 const prevBtn = document.getElementById('prevBtn');

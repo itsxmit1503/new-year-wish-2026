@@ -387,6 +387,11 @@ body {
     -webkit-transform: translateZ(0);
 }
 
+.ending-content {
+    justify-content: flex-start;
+    padding-top: 30px;
+}
+
 /* Heart Icon */
 .heart-icon {
     font-size: 80px;
@@ -482,28 +487,14 @@ body {
 .memories-scroll-container {
     width: 100%;
     height: 400px;
-    overflow-y: auto;
+    overflow: hidden;
     overflow-x: hidden;
     padding: 10px;
     margin: 20px 0;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    will-change: scroll-position;
+    will-change: transform;
+    position: relative;
 }
 
-.memories-scroll-container::-webkit-scrollbar {
-    width: 8px;
-}
-
-.memories-scroll-container::-webkit-scrollbar-track {
-    background: rgba(102, 126, 234, 0.1);
-    border-radius: 10px;
-}
-
-.memories-scroll-container::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 10px;
-}
 
 .memories-scroll {
     display: flex;
@@ -684,23 +675,27 @@ body {
 .final-content,
 .ending-content {
     padding: 30px;
-    overflow-y: auto;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-    will-change: scroll-position;
+    overflow: hidden;
+    will-change: transform;
+}
+
+/* Hide all scrollbars */
+* {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+*::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
 }
 
 .final-content::-webkit-scrollbar,
 .ending-content::-webkit-scrollbar,
-.ending-message-container::-webkit-scrollbar {
-    width: 6px;
-}
-
-.final-content::-webkit-scrollbar-thumb,
-.ending-content::-webkit-scrollbar-thumb,
-.ending-message-container::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 10px;
+.ending-message-container::-webkit-scrollbar,
+.memories-scroll-container::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
 }
 
 .final-title,
@@ -720,9 +715,9 @@ body {
     padding: 25px;
     border-radius: 15px;
     border: 2px solid rgba(255, 107, 157, 0.2);
-    max-height: calc(100vh - 300px);
-    overflow-y: auto;
-    scroll-behavior: smooth;
+    overflow: hidden;
+    height: auto;
+    max-height: none;
 }
 
 .final-message-text,
@@ -738,6 +733,10 @@ body {
 .ending-message-text {
     font-size: 1.15em;
     line-height: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100%;
 }
 
 .highlight {
@@ -1223,6 +1222,7 @@ body {
     .final-content,
     .ending-content {
         padding: 15px 10px;
+        overflow: hidden;
     }
 
     .final-title,
@@ -1234,7 +1234,8 @@ body {
     .final-message-container,
     .ending-message-container {
         padding: 20px 15px;
-        max-height: calc(100vh - 250px);
+        overflow: hidden;
+        max-height: none;
     }
 
     .final-message-text,
