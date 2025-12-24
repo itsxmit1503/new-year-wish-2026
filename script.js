@@ -1,17 +1,21 @@
 // Global variables
-let currentPage = 0;
-const totalPages = 7;
-const cards = document.querySelectorAll('.card');
-const landingPage = document.getElementById('landingPage');
-const mainContainer = document.getElementById('mainContainer');
+let currentPage = 'home';
+const pages = {
+    'home': document.getElementById('homePage'),
+    'welcome': document.getElementById('welcomePage'),
+    'memories': document.getElementById('memoriesPage'),
+    'thoughts': document.getElementById('thoughtsPage'),
+    'why-love': document.getElementById('whyLovePage'),
+    'what-mean': document.getElementById('whatMeanPage'),
+    'forever': document.getElementById('foreverPage'),
+    'celebration': document.getElementById('celebrationPage')
+};
+
 const menuToggle = document.getElementById('menuToggle');
 const sidebarMenu = document.getElementById('sidebarMenu');
 const menuClose = document.getElementById('menuClose');
 const menuItems = document.querySelectorAll('.menu-item');
-const yesBtn = document.getElementById('yesBtn');
-const noBtn = document.getElementById('noBtn');
-const rocketContainer = document.getElementById('rocketContainer');
-const rocket = document.getElementById('rocket');
+const listItems = document.querySelectorAll('.list-item');
 
 // Quote carousel
 let currentQuote = 0;
@@ -25,202 +29,93 @@ const totalQuotesSpan = document.getElementById('totalQuotes');
 // Initialize
 function init() {
     // Set up quote counter
-    totalQuotesSpan.textContent = totalQuotes;
+    if (totalQuotesSpan) {
+        totalQuotesSpan.textContent = totalQuotes;
+    }
     updateQuoteDisplay();
     
-    // Set up landing page
-    setupLandingPage();
+    // Set up menu
+    setupMenu();
     
-    // Set up main content (hidden initially)
-    updateCards();
-    updateNavigation();
+    // Set up list navigation
+    setupListNavigation();
+    
+    // Create floating hearts and stars
     createFloatingHearts();
     createStars();
 }
 
-// Landing Page Setup
-function setupLandingPage() {
-    yesBtn.addEventListener('click', () => {
-        startCelebration();
+// Setup Menu
+function setupMenu() {
+    menuToggle.addEventListener('click', () => {
+        sidebarMenu.classList.toggle('open');
     });
-    
-    noBtn.addEventListener('click', () => {
-        // Make the No button move away
-        noBtn.style.transition = 'all 0.5s ease';
-        noBtn.style.transform = 'translateX(-200px)';
-        noBtn.style.opacity = '0';
-        
-        // After a moment, bring it back with a message
-        setTimeout(() => {
-            noBtn.textContent = "Come on, say Yes! 💕";
-            noBtn.style.transform = 'translateX(0)';
-            noBtn.style.opacity = '1';
-            noBtn.style.background = 'linear-gradient(135deg, #ff6b9d 0%, #c44569 100%)';
-        }, 600);
+
+    menuClose.addEventListener('click', () => {
+        sidebarMenu.classList.remove('open');
+    });
+
+    // Menu Items Navigation
+    menuItems.forEach((item) => {
+        item.addEventListener('click', () => {
+            const pageName = item.getAttribute('data-page');
+            goToPage(pageName);
+            sidebarMenu.classList.remove('open');
+        });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!sidebarMenu.contains(e.target) && !menuToggle.contains(e.target) && sidebarMenu.classList.contains('open')) {
+            sidebarMenu.classList.remove('open');
+        }
     });
 }
 
-// Start Celebration with Rocket
-function startCelebration() {
-    // Hide landing page
-    landingPage.classList.add('hidden');
-    
-    // Show and animate rocket
-    rocketContainer.classList.add('active');
-    
-    // Reset rocket position
-    rocket.style.left = '-10%';
-    rocket.style.top = '50%';
-    
-    // Animate rocket
-    setTimeout(() => {
-        rocket.style.left = '110%';
-        rocket.style.top = '10%';
-    }, 100);
-    
-    // After rocket animation, show main content
-    setTimeout(() => {
-        rocketContainer.classList.remove('active');
-        mainContainer.classList.add('active');
-        menuToggle.classList.add('active');
-        
-        // Create celebration burst
-        createCelebrationBurst();
-    }, 3000);
+// Setup List Navigation
+function setupListNavigation() {
+    listItems.forEach((item) => {
+        item.addEventListener('click', () => {
+            const pageName = item.getAttribute('data-page');
+            goToPage(pageName);
+        });
+    });
 }
 
-// Create celebration burst effect (optimized)
-function createCelebrationBurst() {
-    const emojis = ['🎉', '🎊', '✨', '💖', '💕'];
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-    const count = window.innerWidth > 768 ? 12 : 8; // Fewer on mobile
-    
-    // Use document fragment for better performance
-    const fragment = document.createDocumentFragment();
-    
-    for (let i = 0; i < count; i++) {
-        const emoji = document.createElement('div');
-        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-        emoji.style.position = 'fixed';
-        emoji.style.left = centerX + 'px';
-        emoji.style.top = centerY + 'px';
-        emoji.style.fontSize = window.innerWidth > 768 ? '40px' : '30px';
-        emoji.style.pointerEvents = 'none';
-        emoji.style.zIndex = '1000';
-        emoji.style.opacity = '0';
-        emoji.style.willChange = 'transform, opacity';
-        emoji.style.transform = 'translateZ(0)';
-        
-        const angle = (Math.PI * 2 * i) / count;
-        const distance = window.innerWidth > 768 ? 250 : 150;
-        const endX = centerX + Math.cos(angle) * distance;
-        const endY = centerY + Math.sin(angle) * distance;
-        
-        emoji.style.animation = `celebrationBurst 1.2s ease-out forwards`;
-        emoji.style.setProperty('--end-x', endX + 'px');
-        emoji.style.setProperty('--end-y', endY + 'px');
-        
-        fragment.appendChild(emoji);
-        
-        setTimeout(() => {
-            if (emoji.parentNode) {
-                emoji.remove();
-            }
-        }, 1200);
-    }
-    
-    document.body.appendChild(fragment);
-}
-
-// Add celebration burst animation
-const celebrationStyle = document.createElement('style');
-celebrationStyle.textContent = `
-    @keyframes celebrationBurst {
-        0% {
-            transform: translate3d(-50%, -50%, 0) scale3d(0, 0, 1) rotate(0deg);
-            opacity: 1;
+// Navigate to page
+function goToPage(pageName) {
+    // Hide all pages
+    Object.values(pages).forEach(page => {
+        if (page) {
+            page.classList.remove('active');
         }
-        100% {
-            transform: translate3d(calc(var(--end-x) - 50%), calc(var(--end-y) - 50%), 0) scale3d(1.2, 1.2, 1) rotate(360deg);
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(celebrationStyle);
+    });
 
-// Update card visibility
-function updateCards() {
-    cards.forEach((card, index) => {
-        card.classList.remove('active', 'prev', 'next');
+    // Show selected page
+    if (pages[pageName]) {
+        pages[pageName].classList.add('active');
+        currentPage = pageName;
+        updateMenu();
         
-        if (index === currentPage) {
-            card.classList.add('active');
-            smoothTransition(); // Smooth scroll on page change
-        } else if (index < currentPage) {
-            card.classList.add('prev');
+        // Handle quote rotation
+        if (pageName === 'thoughts') {
+            startQuoteRotation();
         } else {
-            card.classList.add('next');
+            stopQuoteRotation();
         }
-    });
+    }
 }
 
-// Update navigation menu
-function updateNavigation() {
-    // Update menu items
-    menuItems.forEach((item, index) => {
-        if (index === currentPage) {
+// Update menu active state
+function updateMenu() {
+    menuItems.forEach((item) => {
+        const pageName = item.getAttribute('data-page');
+        if (pageName === currentPage) {
             item.classList.add('active');
         } else {
             item.classList.remove('active');
         }
     });
-}
-
-// Navigate to next page
-function nextPage() {
-    if (currentPage < totalPages - 1) {
-        currentPage++;
-        updateCards();
-        updateNavigation();
-        if (currentPage === 2) {
-            startQuoteRotation();
-        } else {
-            stopQuoteRotation();
-        }
-        createHeartBurst();
-    }
-}
-
-// Navigate to previous page
-function prevPage() {
-    if (currentPage > 0) {
-        currentPage--;
-        updateCards();
-        updateNavigation();
-        if (currentPage === 2) {
-            startQuoteRotation();
-        } else {
-            stopQuoteRotation();
-        }
-    }
-}
-
-// Navigate to specific page
-function goToPage(page) {
-    if (page >= 0 && page < totalPages) {
-        currentPage = page;
-        updateCards();
-        updateNavigation();
-        if (page === 2) {
-            startQuoteRotation();
-        } else {
-            stopQuoteRotation();
-        }
-        if (page > 0) {
-            createHeartBurst();
-        }
-    }
 }
 
 // Quote Carousel Functions
@@ -231,7 +126,9 @@ function updateQuoteDisplay() {
             quote.classList.add('active');
         }
     });
-    currentQuoteSpan.textContent = currentQuote + 1;
+    if (currentQuoteSpan) {
+        currentQuoteSpan.textContent = currentQuote + 1;
+    }
 }
 
 function nextQuote() {
@@ -244,42 +141,23 @@ function prevQuote() {
     updateQuoteDisplay();
 }
 
-// Menu Toggle
-menuToggle.addEventListener('click', () => {
-    sidebarMenu.classList.toggle('open');
-});
+// Event listeners for quotes
+if (quoteNextBtn) {
+    quoteNextBtn.addEventListener('click', nextQuote);
+}
+if (quotePrevBtn) {
+    quotePrevBtn.addEventListener('click', prevQuote);
+}
 
-menuClose.addEventListener('click', () => {
-    sidebarMenu.classList.remove('open');
-});
-
-// Menu Items Navigation
-menuItems.forEach((item, index) => {
-    item.addEventListener('click', () => {
-        goToPage(index);
-        sidebarMenu.classList.remove('open');
-    });
-});
-
-// Close menu when clicking outside
-document.addEventListener('click', (e) => {
-    if (!sidebarMenu.contains(e.target) && !menuToggle.contains(e.target) && sidebarMenu.classList.contains('open')) {
-        sidebarMenu.classList.remove('open');
-    }
-});
-
-quoteNextBtn.addEventListener('click', nextQuote);
-quotePrevBtn.addEventListener('click', prevQuote);
-
-// Auto-rotate quotes (optimized - only when page is visible)
+// Auto-rotate quotes (only when on thoughts page)
 let quoteInterval = null;
 function startQuoteRotation() {
     if (quoteInterval) clearInterval(quoteInterval);
     quoteInterval = setInterval(() => {
-        if (currentPage === 2 && document.visibilityState === 'visible') {
+        if (currentPage === 'thoughts' && document.visibilityState === 'visible') {
             nextQuote();
         }
-    }, 6000); // Increased interval for better performance
+    }, 6000);
 }
 
 function stopQuoteRotation() {
@@ -289,43 +167,27 @@ function stopQuoteRotation() {
     }
 }
 
-// Start rotation when on quotes page
-document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && currentPage === 2) {
-        startQuoteRotation();
-    } else {
-        stopQuoteRotation();
-    }
-});
-
 // Keyboard navigation
 document.addEventListener('keydown', (e) => {
-    if (!mainContainer.classList.contains('active')) return;
-    
-    if (e.key === 'ArrowRight') {
-        if (currentPage === 2) {
+    if (currentPage === 'thoughts') {
+        if (e.key === 'ArrowRight') {
             nextQuote();
-        } else {
-            nextPage();
-        }
-    } else if (e.key === 'ArrowLeft') {
-        if (currentPage === 2) {
+        } else if (e.key === 'ArrowLeft') {
             prevQuote();
-        } else {
-            prevPage();
         }
     }
 });
 
 // Create floating hearts in background (optimized)
 let heartCount = 0;
-const maxHearts = 8; // Limit concurrent hearts
+const maxHearts = 6;
 
 function createFloatingHearts() {
     const heartsContainer = document.querySelector('.hearts-container');
+    if (!heartsContainer) return;
+    
     const heartEmojis = ['❤️', '💕', '💖', '💗', '💓', '💝'];
     
-    // Only create hearts if under limit
     const interval = setInterval(() => {
         if (heartCount >= maxHearts) return;
         
@@ -350,7 +212,7 @@ function createFloatingHearts() {
                 heartCount--;
             }
         }, 6000);
-    }, 1500); // Reduced frequency
+    }, 2000);
 }
 
 // Add floating heart animation
@@ -378,10 +240,9 @@ document.head.appendChild(style);
 // Create stars background (optimized)
 function createStars() {
     const starsContainer = document.querySelector('.stars');
-    // Reduce star count for better performance
-    const starCount = window.innerWidth > 768 ? 30 : 20;
+    if (!starsContainer) return;
     
-    // Use document fragment for better performance
+    const starCount = window.innerWidth > 768 ? 25 : 15;
     const fragment = document.createDocumentFragment();
     
     for (let i = 0; i < starCount; i++) {
@@ -423,185 +284,14 @@ twinkleStyle.textContent = `
 `;
 document.head.appendChild(twinkleStyle);
 
-// Create heart burst effect (optimized)
-let lastBurstTime = 0;
-function createHeartBurst() {
-    // Throttle bursts
-    const now = Date.now();
-    if (now - lastBurstTime < 500) return;
-    lastBurstTime = now;
-    
-    const heartEmojis = ['❤️', '💕', '💖', '💗'];
-    const activeCard = cards[currentPage];
-    if (!activeCard) return;
-    
-    const rect = activeCard.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    const count = 6; // Reduced from 8
-    
-    const fragment = document.createDocumentFragment();
-    
-    for (let i = 0; i < count; i++) {
-        const heart = document.createElement('div');
-        heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
-        heart.style.position = 'fixed';
-        heart.style.left = centerX + 'px';
-        heart.style.top = centerY + 'px';
-        heart.style.fontSize = '28px';
-        heart.style.pointerEvents = 'none';
-        heart.style.zIndex = '1000';
-        heart.style.opacity = '0';
-        heart.style.willChange = 'transform, opacity';
-        heart.style.transform = 'translateZ(0)';
-        
-        const angle = (Math.PI * 2 * i) / count;
-        const distance = 80;
-        const endX = centerX + Math.cos(angle) * distance;
-        const endY = centerY + Math.sin(angle) * distance;
-        
-        heart.style.animation = `heartBurst 0.8s ease-out forwards`;
-        heart.style.setProperty('--end-x', endX + 'px');
-        heart.style.setProperty('--end-y', endY + 'px');
-        
-        fragment.appendChild(heart);
-        
-        setTimeout(() => {
-            if (heart.parentNode) {
-                heart.remove();
-            }
-        }, 800);
-    }
-    
-    document.body.appendChild(fragment);
-}
-
-// Add heart burst animation
-const burstStyle = document.createElement('style');
-burstStyle.textContent = `
-    @keyframes heartBurst {
-        0% {
-            transform: translate3d(0, 0, 0) scale3d(0, 0, 1);
-            opacity: 0;
-        }
-        50% {
-            opacity: 1;
-        }
-        100% {
-            transform: translate3d(calc(var(--end-x) - 50%), calc(var(--end-y) - 50%), 0) scale3d(1.2, 1.2, 1);
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(burstStyle);
-
-// Add click effect on cards
-cards.forEach(card => {
-    card.addEventListener('click', (e) => {
-        // Create ripple effect
-        const ripple = document.createElement('div');
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        
-        ripple.style.position = 'absolute';
-        ripple.style.left = x + 'px';
-        ripple.style.top = y + 'px';
-        ripple.style.width = '0';
-        ripple.style.height = '0';
-        ripple.style.borderRadius = '50%';
-        ripple.style.background = 'rgba(255, 107, 157, 0.3)';
-        ripple.style.transform = 'translate(-50%, -50%)';
-        ripple.style.animation = 'ripple 0.6s ease-out';
-        ripple.style.pointerEvents = 'none';
-        
-        card.appendChild(ripple);
-        
-        setTimeout(() => {
-            ripple.remove();
-        }, 600);
-    });
-});
-
-// Add ripple animation
-const rippleStyle = document.createElement('style');
-rippleStyle.textContent = `
-    @keyframes ripple {
-        to {
-            width: 300px;
-            height: 300px;
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(rippleStyle);
-
-// Smooth scroll on page change (optimized)
-function smoothTransition() {
-    if ('scrollBehavior' in document.documentElement.style) {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-        });
+// Visibility API for quote rotation
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && currentPage === 'thoughts') {
+        startQuoteRotation();
     } else {
-        // Fallback for older browsers
-        window.scrollTo(0, 0);
+        stopQuoteRotation();
     }
-}
-
-// Add touch swipe support for mobile
-let touchStartX = 0;
-let touchEndX = 0;
-let touchStartY = 0;
-let touchEndY = 0;
-
-document.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-    touchStartY = e.changedTouches[0].screenY;
-}, { passive: true });
-
-document.addEventListener('touchend', (e) => {
-    touchEndX = e.changedTouches[0].screenX;
-    touchEndY = e.changedTouches[0].screenY;
-    handleSwipe();
-}, { passive: true });
-
-function handleSwipe() {
-    if (!mainContainer.classList.contains('active')) return;
-    
-    const swipeThreshold = 50;
-    const diffX = touchStartX - touchEndX;
-    const diffY = touchStartY - touchEndY;
-    
-    // Only handle horizontal swipes (ignore vertical scrolling)
-    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > swipeThreshold) {
-        if (diffX > 0) {
-            // Swipe left - next page
-            if (currentPage === 2) {
-                nextQuote();
-            } else {
-                nextPage();
-            }
-        } else {
-            // Swipe right - previous page
-            if (currentPage === 2) {
-                prevQuote();
-            } else {
-                prevPage();
-            }
-        }
-    }
-}
-
-// Prevent zoom on double tap for mobile
-let lastTouchEnd = 0;
-document.addEventListener('touchend', (e) => {
-    const now = Date.now();
-    if (now - lastTouchEnd <= 300) {
-        e.preventDefault();
-    }
-    lastTouchEnd = now;
-}, { passive: false });
+});
 
 // Initialize on load
 window.addEventListener('load', () => {
@@ -612,17 +302,4 @@ window.addEventListener('load', () => {
     setTimeout(() => {
         document.body.style.opacity = '1';
     }, 100);
-});
-
-// Smooth page transitions
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-        }
-    });
-}, { threshold: 0.1 });
-
-cards.forEach(card => {
-    observer.observe(card);
 });
