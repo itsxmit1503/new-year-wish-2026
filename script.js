@@ -451,24 +451,30 @@ function smoothTransition() {
 // Add touch swipe support for mobile
 let touchStartX = 0;
 let touchEndX = 0;
+let touchStartY = 0;
+let touchEndY = 0;
 
 document.addEventListener('touchstart', (e) => {
     touchStartX = e.changedTouches[0].screenX;
-});
+    touchStartY = e.changedTouches[0].screenY;
+}, { passive: true });
 
 document.addEventListener('touchend', (e) => {
     touchEndX = e.changedTouches[0].screenX;
+    touchEndY = e.changedTouches[0].screenY;
     handleSwipe();
-});
+}, { passive: true });
 
 function handleSwipe() {
     if (!mainContainer.classList.contains('active')) return;
     
     const swipeThreshold = 50;
-    const diff = touchStartX - touchEndX;
+    const diffX = touchStartX - touchEndX;
+    const diffY = touchStartY - touchEndY;
     
-    if (Math.abs(diff) > swipeThreshold) {
-        if (diff > 0) {
+    // Only handle horizontal swipes (ignore vertical scrolling)
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > swipeThreshold) {
+        if (diffX > 0) {
             // Swipe left - next page
             if (currentPage === 2) {
                 nextQuote();
@@ -485,6 +491,16 @@ function handleSwipe() {
         }
     }
 }
+
+// Prevent zoom on double tap for mobile
+let lastTouchEnd = 0;
+document.addEventListener('touchend', (e) => {
+    const now = Date.now();
+    if (now - lastTouchEnd <= 300) {
+        e.preventDefault();
+    }
+    lastTouchEnd = now;
+}, { passive: false });
 
 // Initialize on load
 window.addEventListener('load', () => {

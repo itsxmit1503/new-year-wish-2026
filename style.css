@@ -933,45 +933,424 @@ body {
     background: #667eea;
 }
 
-/* Responsive */
+/* Responsive - Mobile First Approach */
 @media (max-width: 768px) {
+    body {
+        padding: 10px;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    /* Landing Page Mobile */
+    .landing-page {
+        padding: 20px;
+    }
+
     .landing-title {
-        font-size: 2.5em;
+        font-size: 2.2em;
+        margin-bottom: 15px;
+        padding: 0 10px;
+    }
+    
+    .landing-subtitle {
+        font-size: 1.1em;
+        margin-bottom: 30px;
+        padding: 0 20px;
+    }
+
+    .sparkles .sparkle {
+        font-size: 20px;
+    }
+
+    .sparkles .sparkle:nth-child(1) {
+        left: -30px;
+    }
+
+    .sparkles .sparkle:nth-child(3) {
+        left: 30px;
     }
     
     .button-container {
         flex-direction: column;
         gap: 15px;
+        margin-top: 20px;
+        padding: 0 20px;
     }
     
     .choice-btn {
-        width: 200px;
-    }
-    
-    .container {
-        width: 95%;
-        height: 500px;
-    }
-    
-    .title {
-        font-size: 2em;
-    }
-    
-    .navigation {
-        flex-direction: column;
-        gap: 10px;
-        padding: 10px 20px;
-    }
-    
-    .nav-btn {
         width: 100%;
-    }
-    
-    .quote-text {
+        max-width: 280px;
+        padding: 16px 40px;
         font-size: 1.1em;
     }
+
+    /* Rocket Mobile */
+    .rocket {
+        font-size: 50px;
+    }
+
+    /* Container Mobile */
+    .container {
+        width: 100%;
+        max-width: 100%;
+        height: calc(100vh - 120px);
+        min-height: 500px;
+        margin: 0;
+        padding: 0 10px;
+    }
     
+    /* Cards Mobile */
+    .card-content {
+        padding: 20px 15px;
+        border-radius: 15px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .card-content::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    /* Title Mobile */
+    .title {
+        font-size: 1.8em;
+        margin-bottom: 15px;
+        line-height: 1.2;
+    }
+
+    .subtitle {
+        font-size: 1em;
+        padding: 0 10px;
+    }
+
+    .heart-icon {
+        font-size: 60px;
+        margin-bottom: 15px;
+    }
+
+    /* Year Transition Mobile */
+    .year-transition {
+        font-size: 1.5em;
+        gap: 15px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    /* Memories Mobile */
+    .memories-content {
+        padding: 15px 10px;
+    }
+
+    .memories-content h2 {
+        font-size: 1.8em;
+        margin-bottom: 15px;
+    }
+
+    .memories-scroll-container {
+        height: calc(100vh - 250px);
+        min-height: 300px;
+        padding: 5px;
+        margin: 15px 0;
+    }
+
+    .memory-photo {
+        padding: 12px;
+        margin-bottom: 15px;
+    }
+
+    .photo-placeholder {
+        height: 180px;
+    }
+
+    .photo-icon {
+        font-size: 40px;
+    }
+
+    .memory-caption {
+        font-size: 1em;
+    }
+
+    .memories-note {
+        font-size: 0.85em;
+        padding: 0 10px;
+    }
+
+    /* Quotes Mobile */
+    .quotes-content {
+        padding: 15px 10px;
+    }
+
+    .quotes-content h2 {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+
+    .quotes-container {
+        height: 250px;
+        margin: 15px 0;
+    }
+
+    .quote-item {
+        padding: 15px;
+    }
+
+    .quote-icon {
+        font-size: 45px;
+        margin-bottom: 15px;
+    }
+
+    .quote-text {
+        font-size: 1.1em;
+        line-height: 1.5;
+        padding: 20px 15px;
+    }
+
+    .quote-nav {
+        gap: 15px;
+        margin-top: 15px;
+    }
+
+    .quote-prev,
+    .quote-next {
+        padding: 12px 18px;
+        font-size: 1.1em;
+    }
+
+    .quote-counter {
+        font-size: 1em;
+    }
+
+    /* Final Wish Mobile */
+    .final-content {
+        padding: 15px 10px;
+    }
+
+    .final-title {
+        font-size: 1.8em;
+        margin-bottom: 20px;
+    }
+
+    .final-message-container {
+        padding: 20px 15px;
+    }
+
     .final-message-text {
         font-size: 1em;
+        line-height: 1.6;
+    }
+
+    .highlight {
+        font-size: 1.05em;
+    }
+
+    .forever-wish {
+        font-size: 1.1em;
+        line-height: 1.7;
+        margin: 15px 0;
+    }
+
+    .signature {
+        font-size: 1.2em;
+        margin-top: 15px;
+    }
+
+    .heart-animation {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 15px;
+    }
+
+    .heart-shape {
+        width: 80px;
+        height: 80px;
+    }
+
+    .heart-shape::before,
+    .heart-shape::after {
+        width: 80px;
+        height: 80px;
+    }
+
+    .heart-shape::before {
+        top: -40px;
+    }
+
+    .heart-shape::after {
+        left: 40px;
+    }
+
+    /* Celebration Mobile */
+    .celebration-year {
+        font-size: 2.5em;
+        margin-bottom: 15px;
+    }
+
+    .celebration h2 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+        padding: 0 10px;
+    }
+
+    .fireworks {
+        margin: 20px 0;
+    }
+
+    .fireworks span {
+        font-size: 35px;
+        margin: 0 5px;
+    }
+
+    .celebration-message {
+        font-size: 1.2em;
+        margin-top: 20px;
+        padding: 0 10px;
+    }
+
+    .end-hearts {
+        font-size: 1.5em;
+        margin-top: 15px;
+    }
+
+    /* Navigation Mobile */
+    .navigation {
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 12px 15px;
+        width: calc(100% - 20px);
+        max-width: 500px;
+        border-radius: 25px;
+    }
+
+    .nav-btn {
+        padding: 12px 16px;
+        font-size: 0.9em;
+        flex: 1;
+        min-width: 100px;
+        touch-action: manipulation;
+    }
+
+    .dots {
+        gap: 8px;
+        order: -1;
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 5px;
+    }
+
+    .dot {
+        width: 10px;
+        height: 10px;
+    }
+
+    /* Floating Hearts Mobile */
+    .floating-hearts-final .heart {
+        font-size: 20px;
+    }
+}
+
+/* Extra Small Devices */
+@media (max-width: 480px) {
+    .landing-title {
+        font-size: 1.8em;
+    }
+
+    .landing-subtitle {
+        font-size: 1em;
+    }
+
+    .container {
+        height: calc(100vh - 100px);
+    }
+
+    .title {
+        font-size: 1.5em;
+    }
+
+    .heart-icon {
+        font-size: 50px;
+    }
+
+    .year-transition {
+        font-size: 1.2em;
+    }
+
+    .memories-content h2,
+    .quotes-content h2,
+    .final-title {
+        font-size: 1.5em;
+    }
+
+    .quote-text {
+        font-size: 1em;
+        padding: 15px 12px;
+    }
+
+    .final-message-text {
+        font-size: 0.95em;
+    }
+
+    .celebration-year {
+        font-size: 2em;
+    }
+
+    .celebration h2 {
+        font-size: 1.3em;
+    }
+
+    .navigation {
+        padding: 10px 12px;
+        bottom: 10px;
+    }
+
+    .nav-btn {
+        font-size: 0.85em;
+        padding: 10px 12px;
+    }
+}
+
+/* Landscape Mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .container {
+        height: calc(100vh - 80px);
+    }
+
+    .memories-scroll-container {
+        height: calc(100vh - 200px);
+    }
+
+    .quotes-container {
+        height: 200px;
+    }
+
+    .navigation {
+        bottom: 10px;
+        padding: 8px 12px;
+    }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .choice-btn,
+    .nav-btn,
+    .quote-prev,
+    .quote-next,
+    .dot {
+        -webkit-tap-highlight-color: rgba(102, 126, 234, 0.3);
+        touch-action: manipulation;
+    }
+
+    .card-content {
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Remove hover effects on touch devices */
+    .wish-item:hover,
+    .memory-photo:hover {
+        transform: none;
     }
 }
