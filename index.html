@@ -225,36 +225,99 @@
 
         <!-- Page 7: Celebration Card -->
         <div class="card" id="card7">
-            <div class="card-content">
+            <div class="card-content celebration-page">
                 <div class="celebration">
-                    <h1 class="celebration-year">🎊 2026 🎊</h1>
-                    <h2>Let's Make It Amazing Together!</h2>
-                    <div class="fireworks">
-                        <span>🎆</span>
-                        <span>🎇</span>
-                        <span>✨</span>
-                        <span>💫</span>
+                    <div class="celebration-background">
+                        <div class="confetti"></div>
+                        <div class="confetti"></div>
+                        <div class="confetti"></div>
+                        <div class="confetti"></div>
+                        <div class="confetti"></div>
                     </div>
-                    <p class="celebration-message">Thank you for being you. Here's to us! 💕</p>
-                    <div class="end-hearts">💖 💕 💖</div>
+                    <div class="celebration-content">
+                        <div class="celebration-main">
+                            <h1 class="celebration-year">🎊 2026 🎊</h1>
+                            <div class="celebration-subtitle">
+                                <h2>Let's Make It Amazing Together!</h2>
+                                <p class="celebration-tagline">A New Year, A New Beginning, Forever Us</p>
+                            </div>
+                        </div>
+                        
+                        <div class="fireworks-container">
+                            <div class="fireworks">
+                                <span class="firework-item">🎆</span>
+                                <span class="firework-item">🎇</span>
+                                <span class="firework-item">✨</span>
+                                <span class="firework-item">💫</span>
+                                <span class="firework-item">🌟</span>
+                            </div>
+                        </div>
+                        
+                        <div class="celebration-message-box">
+                            <p class="celebration-message">
+                                Thank you for being the most amazing person in my life.<br>
+                                Here's to us, to love, and to forever! 💕
+                            </p>
+                        </div>
+                        
+                        <div class="celebration-hearts">
+                            <span class="celeb-heart">💖</span>
+                            <span class="celeb-heart">💕</span>
+                            <span class="celeb-heart">💗</span>
+                            <span class="celeb-heart">💓</span>
+                            <span class="celeb-heart">💝</span>
+                        </div>
+                        
+                        <div class="celebration-footer">
+                            <p class="celebration-final">Happy New Year, My Love! ❤️</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Navigation -->
-    <div class="navigation" id="navigation">
-        <button class="nav-btn prev" id="prevBtn">← Previous</button>
-        <div class="dots">
-            <span class="dot active" data-page="0"></span>
-            <span class="dot" data-page="1"></span>
-            <span class="dot" data-page="2"></span>
-            <span class="dot" data-page="3"></span>
-            <span class="dot" data-page="4"></span>
-            <span class="dot" data-page="5"></span>
-            <span class="dot" data-page="6"></span>
+    <!-- Menu Tab -->
+    <div class="menu-toggle" id="menuToggle">
+        <span class="menu-icon">☰</span>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <div class="sidebar-menu" id="sidebarMenu">
+        <div class="menu-header">
+            <h3>💖 Navigate</h3>
+            <button class="menu-close" id="menuClose">×</button>
         </div>
-        <button class="nav-btn next" id="nextBtn">Next →</button>
+        <ul class="menu-list">
+            <li class="menu-item active" data-page="0">
+                <span class="menu-icon-item">🏠</span>
+                <span class="menu-text">Welcome</span>
+            </li>
+            <li class="menu-item" data-page="1">
+                <span class="menu-icon-item">📸</span>
+                <span class="menu-text">Our Memories</span>
+            </li>
+            <li class="menu-item" data-page="2">
+                <span class="menu-icon-item">💭</span>
+                <span class="menu-text">Thoughts for You</span>
+            </li>
+            <li class="menu-item" data-page="3">
+                <span class="menu-icon-item">💖</span>
+                <span class="menu-text">Why I Love You</span>
+            </li>
+            <li class="menu-item" data-page="4">
+                <span class="menu-icon-item">💕</span>
+                <span class="menu-text">What You Mean</span>
+            </li>
+            <li class="menu-item" data-page="5">
+                <span class="menu-icon-item">💝</span>
+                <span class="menu-text">My Forever Wish</span>
+            </li>
+            <li class="menu-item" data-page="6">
+                <span class="menu-icon-item">🎊</span>
+                <span class="menu-text">Celebration</span>
+            </li>
+        </ul>
     </div>
 
     <script src="script.js"></script>

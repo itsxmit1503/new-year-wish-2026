@@ -2,12 +2,12 @@
 let currentPage = 0;
 const totalPages = 7;
 const cards = document.querySelectorAll('.card');
-const dots = document.querySelectorAll('.dot');
-const prevBtn = document.getElementById('prevBtn');
-const nextBtn = document.getElementById('nextBtn');
 const landingPage = document.getElementById('landingPage');
 const mainContainer = document.getElementById('mainContainer');
-const navigation = document.getElementById('navigation');
+const menuToggle = document.getElementById('menuToggle');
+const sidebarMenu = document.getElementById('sidebarMenu');
+const menuClose = document.getElementById('menuClose');
+const menuItems = document.querySelectorAll('.menu-item');
 const yesBtn = document.getElementById('yesBtn');
 const noBtn = document.getElementById('noBtn');
 const rocketContainer = document.getElementById('rocketContainer');
@@ -82,7 +82,7 @@ function startCelebration() {
     setTimeout(() => {
         rocketContainer.classList.remove('active');
         mainContainer.classList.add('active');
-        navigation.classList.add('active');
+        menuToggle.classList.add('active');
         
         // Create celebration burst
         createCelebrationBurst();
@@ -165,18 +165,14 @@ function updateCards() {
     });
 }
 
-// Update navigation buttons and dots
+// Update navigation menu
 function updateNavigation() {
-    // Update buttons
-    prevBtn.disabled = currentPage === 0;
-    nextBtn.disabled = currentPage === totalPages - 1;
-    
-    // Update dots
-    dots.forEach((dot, index) => {
+    // Update menu items
+    menuItems.forEach((item, index) => {
         if (index === currentPage) {
-            dot.classList.add('active');
+            item.classList.add('active');
         } else {
-            dot.classList.remove('active');
+            item.classList.remove('active');
         }
     });
 }
@@ -248,12 +244,28 @@ function prevQuote() {
     updateQuoteDisplay();
 }
 
-// Event listeners
-nextBtn.addEventListener('click', nextPage);
-prevBtn.addEventListener('click', prevPage);
+// Menu Toggle
+menuToggle.addEventListener('click', () => {
+    sidebarMenu.classList.toggle('open');
+});
 
-dots.forEach((dot, index) => {
-    dot.addEventListener('click', () => goToPage(index));
+menuClose.addEventListener('click', () => {
+    sidebarMenu.classList.remove('open');
+});
+
+// Menu Items Navigation
+menuItems.forEach((item, index) => {
+    item.addEventListener('click', () => {
+        goToPage(index);
+        sidebarMenu.classList.remove('open');
+    });
+});
+
+// Close menu when clicking outside
+document.addEventListener('click', (e) => {
+    if (!sidebarMenu.contains(e.target) && !menuToggle.contains(e.target) && sidebarMenu.classList.contains('open')) {
+        sidebarMenu.classList.remove('open');
+    }
 });
 
 quoteNextBtn.addEventListener('click', nextQuote);
