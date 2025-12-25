@@ -79,7 +79,7 @@
 			.start-card h2{font-size:18px}
 		}
 
-		/* Memories images grid */
+		/* Memories images grid (adjusted) */
 		.memories-list{
 			display:grid;
 			grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
@@ -94,9 +94,11 @@
 			text-align:center;
 			border:1px solid rgba(255,255,255,0.04);
 		}
+		/* ensure images show (use max-height for responsiveness and visible fallback) */
 		.memory-photo img{
 			width:100%;
-			height:140px;
+			max-height:220px;
+			height:auto;
 			object-fit:cover;
 			border-radius:8px;
 			display:block;
@@ -237,34 +239,34 @@
     <!-- Page 2: Memories -->
     <div class="page" id="memoriesPage">
         <div class="page-content memories-content">
-            <h2>Our Beautiful Memories</h2>
+            <h2> Beautiful Moments</h2>
             <div class="memories-list">
 				<div class="memory-photo">
-					<img src="assets/memories/photo1.jpg" alt="Memory 1">
+					<img data-file="8df60b269a019b3fc3bd020a0b654d66.jpg" alt="Memory 1">
 					<div class="memory-caption">Beautiful Moment 1</div>
 				</div>
 				<div class="memory-photo">
-					<img src="assets/memories/photo2.jpg" alt="Memory 2">
+					<img data-file="6bb86787bfce0e7296bcfa8f83fae933.jpg" alt="Memory 2">
 					<div class="memory-caption">Beautiful Moment 2</div>
 				</div>
 				<div class="memory-photo">
-					<img src="assets/memories/photo3.jpg" alt="Memory 3">
+					<img data-file="279a6a80a643f294e09675968d65c79c.jpg" alt="Memory 3">
 					<div class="memory-caption">Beautiful Moment 3</div>
 				</div>
 				<div class="memory-photo">
-					<img src="assets/memories/photo4.jpg" alt="Memory 4">
+					<img data-file="2572134e2081d55ca88d35f25fcae777.jpg" alt="Memory 4">
 					<div class="memory-caption">Beautiful Moment 4</div>
 				</div>
 				<div class="memory-photo">
-					<img src="assets/memories/photo5.jpg" alt="Memory 5">
+					<img data-file="f9035af4e747f9d9b5505e2a94420d07.jpg" alt="Memory 5">
 					<div class="memory-caption">Beautiful Moment 5</div>
 				</div>
 				<div class="memory-photo">
-					<img src="assets/memories/photo6.jpg" alt="Memory 6">
+					<img data-file="c6a7866f6f9e85548dc399c4fec19517.jpg" alt="Memory 6">
 					<div class="memory-caption">Beautiful Moment 6</div>
 				</div>
 				<div class="memory-photo">
-					<img src="assets/memories/photo7.jpg" alt="Memory 7">
+					<img data-file="photo7" alt="Memory 7">
 					<div class="memory-caption">Beautiful Moment 7</div>
 				</div>
             </div>
@@ -513,6 +515,44 @@
 			});
 		})();
 	</script>
+
+    <!-- Add: JS to pick the correct image file (try common extensions) -->
+<script>
+	(function(){
+		const exts = ['.jpg','.jpeg','.png','.webp','.gif'];
+		const imgs = document.querySelectorAll('.memory-photo img[data-file]');
+		function testImage(url){ return new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(url); i.onerror=()=>rej(url); i.src=url; }); }
+
+		imgs.forEach(img=>{
+			const name = img.dataset.file;
+			let loaded = false;
+			// try each extension in sequence
+			(async ()=>{
+				for(const e of exts){
+					const url = `./assets/memories/${name}${e}`;
+					try{
+						await testImage(url);
+						img.src = url;
+						img.style.visibility = 'visible';
+						loaded = true;
+						break;
+					}catch(_){}
+				}
+				if(!loaded){
+					// fallback inline SVG placeholder
+					img.src = 'data:image/svg+xml;utf8,' +
+						'<svg xmlns="http://www.w3.org/2000/svg" width="400" height="280">' +
+						'<rect fill="%23eeeeee" width="100%" height="100%"/>' +
+						'<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23999999" font-size="20">Photo not found</text>' +
+						'</svg>';
+					img.style.visibility = 'visible';
+				}
+			})();
+			// keep images hidden until set
+			img.style.visibility = 'hidden';
+		});
+	})();
+</script>
 
     <script src="script.js"></script>
 </body>
