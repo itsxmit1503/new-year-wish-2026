@@ -5,8 +5,94 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy New Year 2026 ❤️</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Add: styles for start overlay and start-state -->
+	<style>
+		/* Start overlay */
+		.start-overlay {
+			position: fixed;
+			inset: 0;
+			background: radial-gradient(ellipse at center, rgba(0,0,0,0.6), rgba(0,0,0,0.85));
+			display:flex;
+			align-items:center;
+			justify-content:center;
+			z-index:9999;
+			backdrop-filter: blur(4px);
+			padding:20px;
+		}
+		.start-card{
+			background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+			color:#fff;
+			border:1px solid rgba(255,255,255,0.08);
+			padding:28px;
+			border-radius:14px;
+			text-align:center;
+			max-width:420px;
+			width:100%;
+			box-shadow:0 10px 30px rgba(0,0,0,0.6);
+		}
+		.start-card h2{margin:0 0 10px;font-size:22px}
+		.start-card p{margin:0 0 18px;opacity:0.95}
+		.start-actions{display:flex;gap:12px;justify-content:center; position:relative;} /* make container relative */
+		.btn {
+			padding:10px 18px;border-radius:10px;border:none;cursor:pointer;font-weight:600;
+			box-shadow:0 6px 18px rgba(0,0,0,0.4);
+		}
+		.btn-yes{background:#ff6b9a;color:#fff}
+		/* Keep NO static initially to avoid overlap */
+		.btn-no{
+			/* position:relative; <-- removed */
+			position: static;
+			background:transparent;border:1px solid rgba(255,255,255,0.12);color:#fff;
+			min-width:72px;
+		}
+
+		/* Hide main page until started */
+		body:not(.started) .page,
+		body:not(.started) .sidebar-menu,
+		body:not(.started) .menu-toggle {
+			pointer-events:none;
+			user-select:none;
+			opacity:0.0;
+			transform:scale(0.995);
+			transition:opacity .6s, transform .6s;
+		}
+
+		/* When started reveal with a little flourish */
+		body.started .page,
+		body.started .sidebar-menu,
+		body.started .menu-toggle {
+			opacity:1;transform:none;pointer-events:auto;user-select:auto;
+		}
+
+		/* Subtle entrance for content after start */
+		body.started .page { transition:opacity .8s ease .2s, transform .8s ease .2s; }
+
+		/* Runaway animation (small smooth transition) - becomes absolute only when moving */
+		.btn-no.move {
+			position: absolute;
+			transition: transform .14s ease, left .14s ease, top .14s ease;
+			will-change:transform,left,top;
+		}
+		/* Small responsive tweaks */
+		@media (max-width:480px){
+			.start-card{padding:18px;border-radius:12px}
+			.start-card h2{font-size:18px}
+		}
+	</style>
 </head>
 <body>
+	<!-- Add: start overlay (appears on load) -->
+	<div class="start-overlay" id="startOverlay" aria-modal="true" role="dialog">
+		<div class="start-card">
+			<h2>Welcome — Open your New Year Surprise?</h2>
+			<p>Would you like to start the celebration? ✨</p>
+			<div class="start-actions">
+				<button class="btn btn-yes" id="btnYes">Yes, open 🎉</button>
+				<button class="btn btn-no" id="btnNo" aria-label="No, run away">No</button>
+			</div>
+		</div>
+	</div>
+
     <div class="stars"></div>
     <div class="hearts-container"></div>
     
@@ -341,6 +427,80 @@
             </div>
         </div>
     </div>
+
+    <!-- Add: inline script to control overlay and button behavior -->
+	<script>
+		// Basic start / runaway no logic (updated to avoid initial overlap)
+		(function(){
+			const overlay = document.getElementById('startOverlay');
+			const btnYes = document.getElementById('btnYes');
+			const btnNo = document.getElementById('btnNo');
+			const body = document.body;
+			const parent = btnNo.parentElement; // .start-actions
+			parent.style.position = parent.style.position || 'relative';
+
+			let initializedAbsolute = false;
+
+			// Convert NO to absolute at its current position (so it doesn't jump over YES)
+			function prepareNoAbsolute(){
+				if (initializedAbsolute) return;
+				const parentRect = parent.getBoundingClientRect();
+				const btnRect = btnNo.getBoundingClientRect();
+				// compute current offsets relative to parent
+				const left = Math.max(0, btnRect.left - parentRect.left);
+				const top = Math.max(0, btnRect.top - parentRect.top);
+				// apply absolute positioning at same visual spot
+				btnNo.style.position = 'absolute';
+				btnNo.style.left = left + 'px';
+				btnNo.style.top = top + 'px';
+				btnNo.style.transform = 'none';
+				initializedAbsolute = true;
+			}
+
+			// Start: show content & hide overlay
+			btnYes.addEventListener('click', function(){
+				body.classList.add('started');
+				overlay.style.transition = 'opacity .5s ease, visibility .5s';
+				overlay.style.opacity = '0';
+				setTimeout(()=>{ overlay.style.display='none'; },500);
+			});
+
+			// Run-away logic for mouse/touch
+			function moveNoAway(){
+				prepareNoAbsolute();
+				const card = btnNo.closest('.start-card');
+				const cardRect = card.getBoundingClientRect();
+				const btnRect = btnNo.getBoundingClientRect();
+				const padding = 10;
+				const maxX = cardRect.width - btnRect.width - padding;
+				const maxY = cardRect.height - btnRect.height - padding;
+				const randX = Math.max(padding, Math.random() * Math.max(1, maxX));
+				const randY = Math.max(padding, Math.random() * Math.max(1, maxY));
+				btnNo.classList.add('move');
+				btnNo.style.left = randX + 'px';
+				btnNo.style.top = randY + 'px';
+				btnNo.style.transform = 'none';
+			}
+
+			// Trigger move on mouseenter over the NO button
+			btnNo.addEventListener('mouseenter', function(){
+				moveNoAway();
+			});
+
+			// For touch devices: move on touchstart
+			btnNo.addEventListener('touchstart', function(e){
+				e.preventDefault();
+				moveNoAway();
+			}, {passive:false});
+
+			// If user clicks NO, nudge then run
+			btnNo.addEventListener('click', function(e){
+				e.preventDefault();
+				btnNo.animate([{transform:'translateY(0)'},{transform:'translateY(-6px)'},{transform:'translateY(0)'}], {duration:260});
+				moveNoAway();
+			});
+		})();
+	</script>
 
     <script src="script.js"></script>
 </body>
