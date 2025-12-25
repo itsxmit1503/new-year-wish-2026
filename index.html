@@ -106,6 +106,26 @@
 			background:#f6f6f6;
 		}
 		.memory-caption{font-size:13px;color:#fff;opacity:.95}
+
+		/* New: ensure pages can scroll when content is taller than the viewport */
+		html, body {
+		height: 100%;
+		}
+		.page {
+		min-height: 100vh;            /* let page fill viewport at minimum */
+		box-sizing: border-box;
+		overflow-y: auto;            /* enable vertical scrolling */
+		-webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+		}
+		.page .page-content {
+		padding-bottom: 48px; /* avoid content being clipped at bottom */
+		}
+
+		/* Optional: keep hidden overlay from blocking interactions after it's removed */
+		.start-overlay[style*="display: none"], .start-overlay[hidden] {
+		visibility: hidden;
+		pointer-events: none;
+		}
 	</style>
 </head>
 <body>
